@@ -8,8 +8,9 @@ const api = axios.create({
   responseType: "json",
 });
 
-export function setAuthorizationHeader(token) {
-  api.defaults.headers.common.Authorization = `Bearer ${token}`;
+export function setAuthorizationHeader() {
+  const token = sessionStorage.getItem("1jnasjn3jn") ?? "";
+  api.defaults.headers.common["x-access-token"] = `${token}`;
 }
 
 export default api;

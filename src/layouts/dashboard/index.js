@@ -8,17 +8,27 @@ import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
-import CardWithImage from "components/CardWithImage";
-import useFetchProducts from "api/hooks/useFetchProducts";
+import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
+import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
+import { setHideSidebar, useMaterialUIController } from "context";
+import { useEffect } from "react";
+import { setAuthorizationHeader } from "api";
+import Projects from "./components/Projects";
+import OrdersOverview from "./components/OrdersOverview";
+import reportsLineChartData from "./data/reportsLineChartData";
 
 function Dashboard() {
-  const { data } = useFetchProducts();
-  const products = data?.data?.data ?? [];
+  // eslint-disable-next-line no-unused-vars
+  const [_, dispatch] = useMaterialUIController();
+  useEffect(() => {
+    setHideSidebar(dispatch, false);
+    setAuthorizationHeader();
+  }, []);
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-        {/* <Grid container spacing={3}>
+        <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
@@ -78,18 +88,16 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-        </Grid> */}
+        </Grid>
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
-            {products &&
-              products?.map((item, key) => (
-                <Grid item xs={12} md={6} lg={4} key={item.title + key ?? Math.random() + key}>
-                  <MDBox mb={3}>
-                    <CardWithImage {...item} />
-                  </MDBox>
-                </Grid>
-              ))}
-            {/* <Grid item xs={12} md={6} lg={4}>
+            {/* {products &&
+              products?.map((item, key) => ( */}
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={3}>{/* <CardWithImage {...item} /> */}</MDBox>
+            </Grid>
+            {/* ))} */}
+            <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="success"
@@ -100,7 +108,7 @@ function Dashboard() {
                     </>
                   }
                   date="updated 4 min ago"
-                  chart={sales}
+                  chart={reportsLineChartData.sales}
                 />
               </MDBox>
             </Grid>
@@ -111,13 +119,13 @@ function Dashboard() {
                   title="completed tasks"
                   description="Last Campaign Performance"
                   date="just updated"
-                  chart={tasks}
+                  chart={reportsLineChartData.tasks}
                 />
               </MDBox>
-            </Grid> */}
+            </Grid>
           </Grid>
         </MDBox>
-        {/* <MDBox>
+        <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>
               <Projects />
@@ -126,7 +134,7 @@ function Dashboard() {
               <OrdersOverview />
             </Grid>
           </Grid>
-        </MDBox> */}
+        </MDBox>
       </MDBox>
       {/* <Footer /> */}
     </DashboardLayout>

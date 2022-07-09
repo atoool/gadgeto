@@ -62,6 +62,9 @@ function reducer(state, action) {
     case "DARKMODE": {
       return { ...state, darkMode: action.value };
     }
+    case "HIDE_SIDEBAR": {
+      return { ...state, hideSidebar: action.value };
+    }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -72,7 +75,7 @@ function reducer(state, action) {
 function MaterialUIControllerProvider({ children }) {
   const initialState = {
     miniSidenav: false,
-    transparentSidenav: false,
+    transparentSidenav: true,
     whiteSidenav: false,
     sidenavColor: "info",
     transparentNavbar: true,
@@ -81,6 +84,7 @@ function MaterialUIControllerProvider({ children }) {
     direction: "ltr",
     layout: "dashboard",
     darkMode: false,
+    hideSidebar: true,
   };
 
   const [controller, dispatch] = useReducer(reducer, initialState);
@@ -119,6 +123,7 @@ const setOpenConfigurator = (dispatch, value) => dispatch({ type: "OPEN_CONFIGUR
 const setDirection = (dispatch, value) => dispatch({ type: "DIRECTION", value });
 const setLayout = (dispatch, value) => dispatch({ type: "LAYOUT", value });
 const setDarkMode = (dispatch, value) => dispatch({ type: "DARKMODE", value });
+const setHideSidebar = (dispatch, value) => dispatch({ type: "HIDE_SIDEBAR", value });
 
 export {
   MaterialUIControllerProvider,
@@ -133,4 +138,5 @@ export {
   setDirection,
   setLayout,
   setDarkMode,
+  setHideSidebar,
 };

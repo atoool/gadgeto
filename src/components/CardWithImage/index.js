@@ -11,15 +11,11 @@ import Divider from "@mui/material/Divider";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import { Button } from "@mui/material";
+import SwipeableImages from "components/carousel";
 
 function CardWithImage({ url, img, title, desc, price, priceSymbol }) {
   return (
-    <Card
-      sx={{ height: "100%" }}
-      onClick={() => {
-        window.open(url);
-      }}
-    >
+    <Card sx={{ height: "100%" }}>
       <MDBox padding="1rem">
         {useMemo(
           () => (
@@ -34,22 +30,19 @@ function CardWithImage({ url, img, title, desc, price, priceSymbol }) {
                 boxShadow: "0px -2px 20px 1px rgba(0,0,0,0.1)",
               }}
             >
-              <img
-                src={img}
-                alt="test"
-                loading="lazy"
-                style={{
-                  borderRadius: 4,
-                  display: "flex",
-                  height: "20vh",
-                  justifySelf: "center",
-                }}
-              />
+              <SwipeableImages img={img} />
             </MDBox>
           ),
           [title]
         )}
-        <MDBox pt={3} pb={1} px={1}>
+        <MDBox
+          pt={3}
+          pb={1}
+          px={1}
+          onClick={() => {
+            window.open(url);
+          }}
+        >
           <MDTypography
             variant="h6"
             textTransform="capitalize"
@@ -65,11 +58,11 @@ function CardWithImage({ url, img, title, desc, price, priceSymbol }) {
             fontWeight="light"
             style={{ textAlign: "center" }}
           >
-            {desc}
+            {desc?.length > 150 ? `${desc?.substring(0, 150)}...` : desc}
           </MDTypography>
           <Divider />
           <MDBox display="flex" alignItems="center" width="100%" justifyContent="space-between">
-            <MDTypography variant="240" color="primary" fontWeight="bold">
+            <MDTypography variant="240" fontWeight="bold">
               {priceSymbol + price}
             </MDTypography>
             <Button>More</Button>

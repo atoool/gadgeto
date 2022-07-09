@@ -38,12 +38,13 @@ function DashboardLayout({ children }) {
 
   return (
     <MDBox
-      sx={({ breakpoints, transitions, functions: { pxToRem } }) => ({
+      sx={({ palette, breakpoints, transitions, functions: { pxToRem } }) => ({
         p: 3,
         position: "relative",
+        backgroundColor: (palette.background.default, 0.8),
 
         [breakpoints.up("xl")]: {
-          marginLeft: miniSidenav ? pxToRem(0) : pxToRem(0),
+          marginLeft: miniSidenav || pathname?.indexOf("/home") > -1 ? pxToRem(0) : pxToRem(275),
           transition: transitions.create(["margin-left", "margin-right"], {
             easing: transitions.easing.easeInOut,
             duration: transitions.duration.standard,

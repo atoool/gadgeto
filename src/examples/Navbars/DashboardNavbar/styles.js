@@ -27,7 +27,7 @@ function navbar(theme, ownerState) {
     backgroundColor:
       transparentNavbar || absolute
         ? `${transparent.main} !important`
-        : rgba(darkMode ? background.default : white.main, 0.8),
+        : rgba(background.default, darkMode ? 0.8 : 0),
 
     color: () => {
       let color;
@@ -42,8 +42,8 @@ function navbar(theme, ownerState) {
 
       return color;
     },
-    top: absolute ? 0 : pxToRem(12),
-    minHeight: pxToRem(75),
+    top: 0,
+    minHeight: pxToRem(100),
     display: "grid",
     alignItems: "center",
     borderRadius: borderRadius.xl,
