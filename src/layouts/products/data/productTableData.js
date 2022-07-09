@@ -20,12 +20,10 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
 
-// Images
-import team2 from "assets/images/team-2.jpg";
 import { Icon, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
 
-export default function data({ products }) {
+export default function data({ products, modal = null, productDelete }) {
   const Title = ({ image, title }) => (
     <MDBox display="flex" alignItems="center" lineHeight={1}>
       <MDAvatar src={image} name={title} size="sm" />
@@ -43,33 +41,26 @@ export default function data({ products }) {
     </MDTypography>
   );
 
-  const Action = () => (
+  const Action = ({ index = "" }) => (
     <MDBox display="flex" alignItems="left" lineHeight={1}>
-      <IconButton size="small" color="secondary">
+      <IconButton size="small" color="secondary" onClick={() => modal && modal?.openModal(index)}>
         <Icon fontSize="small">edit</Icon>
       </IconButton>
-      <IconButton size="small" color="secondary">
+      <IconButton
+        size="small"
+        color="secondary"
+        onClick={() => productDelete && productDelete(index)}
+      >
         <Icon fontSize="small">delete</Icon>
       </IconButton>
     </MDBox>
   );
 
-  const [rows, setRows] = useState([
-    {
-      title: Title({ image: team2, title: "John Michael" }),
-      desc: NormalTypo({ text: "Description" }),
-      price: NormalTypo({ text: "2500" }),
-      symbol: NormalTypo({ text: "$" }),
-      url: NormalTypo({ text: "https://flipkart.com" }),
-      category: NormalTypo({ text: "Electronics" }),
-      category_id: NormalTypo({ text: "25" }),
-      action: Action(),
-    },
-  ]);
+  const [rows, setRows] = useState([]);
 
   useEffect(() => {
     if (products && products?.length > 0) {
-      const arr = products.map((f) => ({
+      const arr = products.map((f, i) => ({
         title: Title({ image: f?.img[0], title: f?.title }),
         desc: NormalTypo({ text: f?.desc }),
         price: NormalTypo({ text: f?.price }),
@@ -77,7 +68,7 @@ export default function data({ products }) {
         url: NormalTypo({ text: f?.url }),
         category: NormalTypo({ text: f?.category }),
         category_id: NormalTypo({ text: f?.category_id }),
-        action: Action(),
+        action: Action({ index: i }),
       }));
       setRows(arr);
     }

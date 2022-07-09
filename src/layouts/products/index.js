@@ -29,9 +29,10 @@ import DataTable from "layouts/products/components/DataTable";
 // Data
 import productTableData from "layouts/products/data/productTableData";
 import { Icon, IconButton } from "@mui/material";
-import { useFetchProducts } from "api/hooks/useProductApi";
+import { useDeleteProduct, useFetchProducts } from "api/hooks/useProductApi";
 import { useRef } from "react";
 import Snack from "components/MDSnackbar/Snack";
+import { useQueryClient } from "react-query";
 import Modal from "./components/modal";
 
 function Products() {
@@ -39,8 +40,37 @@ function Products() {
   const snack = useRef();
   const { data } = useFetchProducts();
   const products = data?.data?.data ?? [];
-  const { columns, rows } = productTableData({ products });
 
+  const productQuery = useQueryClient();
+  const productDelete = useDeleteProduct();
+
+  const onDelete = (i) => {
+    const callback = {
+      onSuccess: (res) => {
+        productQuery.refetchQueries("fetch-products");
+        snack?.open({
+          open: true,
+          success: true,
+          message: res?.data?.message ?? "successfully submitted",
+        });
+      },
+      onError: (res) => {
+        snack?.open({
+          open: true,
+          success: false,
+          message: res.response?.data?.message ?? "something went wrong",
+        });
+      },
+    };
+    // eslint-disable-next-line no-underscore-dangle
+    productDelete.mutate(products[i]?._id, callback);
+  };
+
+  const { columns, rows } = productTableData({
+    products,
+    modal: modal.current,
+    productDelete: onDelete,
+  });
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -89,7 +119,7 @@ function Products() {
           </Grid>
         </Grid>
         <Snack ref={snack} />
-        <Modal ref={modal} products={products} snack={snack.current} />
+        <Modal ref={modal} products={products} snack={snack.current} productQuery={productQuery} />
       </MDBox>
     </DashboardLayout>
   );

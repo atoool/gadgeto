@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import { List, TextField } from "@mui/material";
 import { useUpdateProduct, useAddProduct } from "api/hooks/useProductApi";
-import { useQueryClient } from "react-query";
 import SwipeableImages from "../carousel";
 
 const style = {
@@ -24,7 +23,7 @@ const style = {
 };
 
 // eslint-disable-next-line react/prop-types
-function BasicModal({ products, snack = null }, ref) {
+function BasicModal({ products, productQuery, snack = null }, ref) {
   const productSchema = {
     title: "",
     price: "",
@@ -42,7 +41,6 @@ function BasicModal({ products, snack = null }, ref) {
 
   const productAddMutation = useAddProduct();
   const productUpdateMutation = useUpdateProduct();
-  const productQuery = useQueryClient();
 
   const handleOpen = (val = "") => {
     if (val !== "") {
@@ -65,15 +63,25 @@ function BasicModal({ products, snack = null }, ref) {
     const callback = {
       onSuccess: (res) => {
         handleClose();
-        snack?.open({ open: true, success: true, message: res?.data?.message });
-        productQuery.refetchQueries("fetch-products");
+        snack?.open({
+          open: true,
+          success: true,
+          message: res?.data?.message ?? "successfully submitted",
+        });
+        // eslint-disable-next-line react/prop-types
+        productQuery?.refetchQueries("fetch-products");
       },
       onError: (res) => {
         handleClose();
-        snack?.open({ open: true, success: false, message: res.response?.data?.message });
+        snack?.open({
+          open: true,
+          success: false,
+          message: res.response?.data?.message ?? "something went wrong",
+        });
       },
     };
-    if (isEdit) productUpdateMutation.mutate(product, callback);
+    // eslint-disable-next-line no-underscore-dangle
+    if (isEdit) productUpdateMutation.mutate({ product, id: product?._id }, callback);
     else productAddMutation.mutate(product, callback);
   };
 
@@ -91,7 +99,7 @@ function BasicModal({ products, snack = null }, ref) {
         value={product[itm]}
         label={itm}
         multiline={itm === "desc"}
-        minRows={itm === "desc" ? 4 : 1}
+        maxRows={itm === "desc" ? 3 : 1}
         style={{ marginBottom: 10, width: "100%" }}
       />
     ));

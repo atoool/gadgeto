@@ -10,9 +10,9 @@ export function useAddProduct() {
 }
 
 export function useUpdateProduct() {
-  return useMutation("add-product", ({ product, id }) => api.post(`/products/${id}`, product));
+  return useMutation("update-product", ({ product, id }) => api.put(`/products/${id}`, product));
 }
 
 export function useDeleteProduct() {
-  return useMutation("add-product", ({ product, id }) => api.post(`/products/${id}`, product));
+  return useMutation("delete-product", (id) => api.delete(`/products/${id}`));
 }
