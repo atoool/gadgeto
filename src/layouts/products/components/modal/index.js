@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -23,12 +24,13 @@ const style = {
 };
 
 // eslint-disable-next-line react/prop-types
-function BasicModal({ products, productQuery, snack = null }, ref) {
+function BasicModal({ productQuery, snack = null }, ref) {
   const productSchema = {
     title: "",
     price: "",
-    symbol: "",
+    priceSymbol: "",
     url: "",
+    country: "",
     category: "",
     category_id: "",
     img: [],
@@ -42,20 +44,22 @@ function BasicModal({ products, productQuery, snack = null }, ref) {
   const productAddMutation = useAddProduct();
   const productUpdateMutation = useUpdateProduct();
 
-  const handleOpen = (val = "") => {
-    if (val !== "") {
-      setProduct(products[val]);
+  const handleOpen = (val = null) => {
+    if (val != null) {
+      setProduct(val);
       setIsEdit(true);
+      setOpen(true);
     } else {
       setProduct(productSchema);
       setIsEdit(false);
+      setOpen(true);
     }
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
 
   React.useImperativeHandle(ref, () => ({
-    openModal: (val = "") => handleOpen(val),
+    openModal: (val = null) => handleOpen(val),
     closeModal: () => handleClose(),
   }));
 
@@ -85,31 +89,30 @@ function BasicModal({ products, productQuery, snack = null }, ref) {
     else productAddMutation.mutate(product, callback);
   };
 
-  const Input = ({ item }) =>
-    Object.keys(item)?.map((itm, key) => (
+  const Input = () =>
+    Object.keys(productSchema)?.map((itm, key) => (
       <TextField
         key={`${itm + key}`}
         onChange={({ currentTarget }) => {
-          let val = currentTarget?.value;
+          let val = currentTarget?.value ?? "";
           if (itm === "img") {
-            val = val.split(",");
+            val = val?.split(",") ?? [];
           }
           setProduct({ ...product, [itm]: val });
         }}
-        value={product[itm]}
+        value={product[itm] ? product[itm] : ""}
         label={itm}
         multiline={itm === "desc"}
         maxRows={itm === "desc" ? 3 : 1}
         style={{ marginBottom: 10, width: "100%" }}
       />
     ));
-
   return (
     <Modal open={open} onClose={handleClose}>
       <List sx={style}>
-        <SwipeableImages img={product.img} />
+        <SwipeableImages img={product?.img ?? []} />
         <Box style={{ flexDirection: "column", display: "flex" }}>
-          <Box>{Input({ item: product })}</Box>
+          <Box>{Input()}</Box>
           <Button
             variant="contained"
             style={{

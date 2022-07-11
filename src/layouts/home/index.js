@@ -9,15 +9,17 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import CardWithImage from "components/CardWithImage";
-import { useFetchProducts } from "api/hooks/useProductApi";
+import { useMaterialUIController } from "context";
+import { useFetchProductsByCountry } from "api/hooks/useProductApi";
 
 function Home() {
-  const { data } = useFetchProducts();
+  const [controller] = useMaterialUIController();
+  const { data } = useFetchProductsByCountry(controller.country);
   const products = data?.data?.data ?? [];
   return (
-    <DashboardLayout style={{ backgroundColor: "red" }}>
+    <DashboardLayout>
       <DashboardNavbar showLogout={false} />
-      <MDBox py={3}>
+      <MDBox py={3} className>
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
             {products &&

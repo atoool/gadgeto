@@ -21,15 +21,18 @@ import App from "App";
 // Material Dashboard 2 React Context Provider
 import { MaterialUIControllerProvider } from "context";
 import { QueryClient, QueryClientProvider } from "react-query";
+import ErrorBoundary from "components/ErrorBoundry";
 
 const queryClient = new QueryClient();
 ReactDOM.render(
-  <BrowserRouter>
-    <QueryClientProvider client={queryClient}>
-      <MaterialUIControllerProvider>
-        <App />
-      </MaterialUIControllerProvider>
-    </QueryClientProvider>
-  </BrowserRouter>,
+  <ErrorBoundary>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <MaterialUIControllerProvider>
+          <App />
+        </MaterialUIControllerProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
+  </ErrorBoundary>,
   document.getElementById("root")
 );

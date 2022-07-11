@@ -52,7 +52,6 @@ function SwipeableImages({ img = [] }) {
         position="static"
         activeStep={activeStep}
         variant="dots"
-        dotActive={{ color: "green" }}
         style={{ backgroundColor: "rgba(0,0,0,0)", display: "flex", justifyContent: "center" }}
       />
     </Box>

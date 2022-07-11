@@ -21,7 +21,7 @@ import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
 
 import { Icon, IconButton } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function data({ products, modal = null, productDelete }) {
   const Title = ({ image, title }) => (
@@ -41,19 +41,30 @@ export default function data({ products, modal = null, productDelete }) {
     </MDTypography>
   );
 
-  const Action = ({ index = "" }) => (
-    <MDBox display="flex" alignItems="left" lineHeight={1}>
-      <IconButton size="small" color="secondary" onClick={() => modal && modal?.openModal(index)}>
-        <Icon fontSize="small">edit</Icon>
-      </IconButton>
-      <IconButton
-        size="small"
-        color="secondary"
-        onClick={() => productDelete && productDelete(index)}
-      >
-        <Icon fontSize="small">delete</Icon>
-      </IconButton>
-    </MDBox>
+  const Action = useMemo(
+    () =>
+      ({ index = "", product = {} }) =>
+        (
+          <MDBox display="flex" alignItems="left" lineHeight={1}>
+            <IconButton
+              size="small"
+              color="secondary"
+              onClick={() => {
+                if (modal) modal?.openModal(product);
+              }}
+            >
+              <Icon fontSize="small">edit</Icon>
+            </IconButton>
+            <IconButton
+              size="small"
+              color="secondary"
+              onClick={() => productDelete && productDelete(index)}
+            >
+              <Icon fontSize="small">delete</Icon>
+            </IconButton>
+          </MDBox>
+        ),
+    [modal]
   );
 
   const [rows, setRows] = useState([]);
@@ -66,9 +77,10 @@ export default function data({ products, modal = null, productDelete }) {
         price: NormalTypo({ text: f?.price }),
         symbol: NormalTypo({ text: f?.priceSymbol }),
         url: NormalTypo({ text: f?.url }),
+        country: NormalTypo({ text: f?.country }),
         category: NormalTypo({ text: f?.category }),
         category_id: NormalTypo({ text: f?.category_id }),
-        action: Action({ index: i }),
+        action: Action({ index: i, product: f }),
       }));
       setRows(arr);
     }
@@ -81,6 +93,7 @@ export default function data({ products, modal = null, productDelete }) {
       { Header: "price", accessor: "price", align: "center" },
       { Header: "symbol", accessor: "symbol", align: "center" },
       { Header: "url", accessor: "url", align: "center" },
+      { Header: "country", accessor: "country", align: "center" },
       { Header: "category", accessor: "category", align: "center" },
       { Header: "cat_id", accessor: "category_id", align: "center" },
       { Header: "action", accessor: "action", align: "center" },

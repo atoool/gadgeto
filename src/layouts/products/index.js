@@ -119,7 +119,7 @@ function Products() {
           </Grid>
         </Grid>
         <Snack ref={snack} />
-        <Modal ref={modal} products={products} snack={snack.current} productQuery={productQuery} />
+        <Modal ref={modal} snack={snack.current} productQuery={productQuery} />
       </MDBox>
     </DashboardLayout>
   );

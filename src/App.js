@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 // react-router components
 import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
@@ -32,33 +32,24 @@ import Configurator from "examples/Configurator";
 
 // Material Dashboard 2 React themes
 import theme from "assets/theme";
-import themeRTL from "assets/theme/theme-rtl";
 
 // Material Dashboard 2 React Dark Mode themes
 import themeDark from "assets/theme-dark";
-import themeDarkRTL from "assets/theme-dark/theme-rtl";
-
-// RTL plugins
-import rtlPlugin from "stylis-plugin-rtl";
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
 
 // Material Dashboard 2 React routes
 import routes from "routes";
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import { useMaterialUIController, setMiniSidenav, setOpenConfigurator, setCountry } from "context";
 
-// Images
-import brandWhite from "assets/images/logo-ct.png";
-import brandDark from "assets/images/logo-ct-dark.png";
 import { setAuthorizationHeader } from "api";
+import useFetchCountry from "api/hooks/useFetchCountry";
+import Logo from "components/logo";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
-    direction,
     layout,
     openConfigurator,
     sidenavColor,
@@ -68,19 +59,8 @@ export default function App() {
     hideSidebar,
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
-  const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-
-  // Cache for the rtl
-  useMemo(() => {
-    const cacheRtl = createCache({
-      key: "rtl",
-      stylisPlugins: [rtlPlugin],
-    });
-
-    setRtlCache(cacheRtl);
-  }, []);
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -121,6 +101,13 @@ export default function App() {
     }
   }, [pathname]);
 
+  const countryQuery = useFetchCountry();
+  useEffect(() => {
+    // eslint-disable-next-line no-unused-expressions
+    if (controller.country === "" || controller.country == null)
+      setCountry(dispatch, countryQuery.data?.data.country_code);
+  }, [countryQuery.isFetched]);
+
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
       if (route.collapse) {
@@ -157,33 +144,8 @@ export default function App() {
       </Icon>
     </MDBox>
   );
-
-  return direction === "rtl" ? (
-    <CacheProvider value={rtlCache}>
-      <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
-        <CssBaseline />
-        {layout === "dashboard" && (
-          <>
-            <Sidenav
-              color={sidenavColor}
-              brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="Material Dashboard 2"
-              routes={routes}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-            />
-            <Configurator />
-            {configsButton}
-          </>
-        )}
-        {layout === "vr" && <Configurator />}
-        <Routes>
-          {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/home" />} />
-        </Routes>
-      </ThemeProvider>
-    </CacheProvider>
-  ) : (
+  if (!controller.country) return <Logo />;
+  return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
       {!hideSidebar && layout === "dashboard" && (

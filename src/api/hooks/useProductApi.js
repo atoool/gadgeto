@@ -5,6 +5,10 @@ export function useFetchProducts() {
   return useQuery("fetch-products", () => api.get(`/products`));
 }
 
+export function useFetchProductsByCountry(country = "") {
+  return useQuery("fetch-products-by-country", () => api.get(`/products/${country}`));
+}
+
 export function useAddProduct() {
   return useMutation("add-product", (data) => api.post(`/products`, data));
 }

@@ -94,10 +94,6 @@ function Dashboard() {
             {/* {products &&
               products?.map((item, key) => ( */}
             <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>{/* <CardWithImage {...item} /> */}</MDBox>
-            </Grid>
-            {/* ))} */}
-            <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="success"
@@ -112,6 +108,7 @@ function Dashboard() {
                 />
               </MDBox>
             </Grid>
+            {/* ))} */}
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
                 <ReportsLineChart
@@ -120,6 +117,21 @@ function Dashboard() {
                   description="Last Campaign Performance"
                   date="just updated"
                   chart={reportsLineChartData.tasks}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={3}>
+                <ReportsLineChart
+                  color="success"
+                  title="daily sales"
+                  description={
+                    <>
+                      (<strong>+15%</strong>) increase in today sales.
+                    </>
+                  }
+                  date="updated 4 min ago"
+                  chart={reportsLineChartData.sales}
                 />
               </MDBox>
             </Grid>
