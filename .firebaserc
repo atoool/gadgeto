@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "my-new-react-app"
+  },
+  "targets": {
+    "my-new-react-app": {
+      "hosting": {
+        "gadgeto": [
+          "gadgeto"
+        ]
+      }
+    }
+  }
+}
