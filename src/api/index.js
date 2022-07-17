@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// export const baseURL = "http://localhost:3001";
-export const baseURL = "https://flycore-affiliate.herokuapp.com";
+export const baseURL = "http://localhost:3001";
+// export const baseURL = "https://flycore-affiliate.herokuapp.com";
 export const version = "V1.0.0";
 
 const api = axios.create({

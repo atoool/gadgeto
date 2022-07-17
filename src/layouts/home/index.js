@@ -11,14 +11,34 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import CardWithImage from "components/CardWithImage";
 import { useMaterialUIController } from "context";
 import { useFetchProductsByCountry } from "api/hooks/useProductApi";
+import { useEffect, useState } from "react";
 
 function Home() {
   const [controller] = useMaterialUIController();
   const { data } = useFetchProductsByCountry(controller.country);
-  const products = data?.data?.data ?? [];
+  // const products = data?.data?.data ?? [];
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    if (data?.data?.data) {
+      setProducts(data?.data?.data);
+    }
+  }, [data]);
+
+  const onSearch = ({ target }) => {
+    const { value = "" } = target;
+    if (value && value !== "") {
+      const newProdArray = products.filter(
+        (f) => f.title?.toLowerCase()?.indexOf(value?.toLowerCase()) > -1
+      );
+      setProducts(newProdArray);
+    } else {
+      setProducts(data?.data?.data);
+    }
+  };
   return (
     <DashboardLayout>
-      <DashboardNavbar showLogout={false} />
+      <DashboardNavbar showLogout={false} onSearch={onSearch} />
       <MDBox py={3} className>
         <MDBox mt={4.5}>
           <Grid container spacing={3}>

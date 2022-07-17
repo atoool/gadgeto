@@ -45,7 +45,7 @@ import {
 // Material Dashboard 2 React context
 import { useMaterialUIController, setTransparentNavbar } from "context";
 
-function DashboardNavbar({ absolute, light, isMini, showLogout }) {
+function DashboardNavbar({ absolute, light, isMini, showLogout, onSearch }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { transparentNavbar, fixedNavbar, darkMode } = controller;
@@ -108,7 +108,7 @@ function DashboardNavbar({ absolute, light, isMini, showLogout }) {
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox pr={1}>
-              <MDInput label="Search here" />
+              <MDInput label="Search here" onChange={onSearch} />
             </MDBox>
             {showLogout && (
               <MDBox color={light ? "white" : "inherit"}>
@@ -130,6 +130,8 @@ DashboardNavbar.defaultProps = {
   light: false,
   isMini: false,
   showLogout: true,
+  // eslint-disable-next-line react/default-props-match-prop-types, no-unused-vars
+  onSearch: (_v) => {},
 };
 
 // Typechecking props for the DashboardNavbar
@@ -138,6 +140,7 @@ DashboardNavbar.propTypes = {
   light: PropTypes.bool,
   isMini: PropTypes.bool,
   showLogout: PropTypes.bool,
+  onSearch: PropTypes.func,
 };
 
 export default DashboardNavbar;
