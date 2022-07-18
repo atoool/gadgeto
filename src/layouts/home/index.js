@@ -12,16 +12,25 @@ import CardWithImage from "components/CardWithImage";
 import { useMaterialUIController } from "context";
 import { useFetchProductsByCountry } from "api/hooks/useProductApi";
 import { useEffect, useState } from "react";
+import { Pagination } from "@mui/material";
 
+const maxItems = 9;
 function Home() {
   const [controller] = useMaterialUIController();
   const { data } = useFetchProductsByCountry(controller.country);
-  // const products = data?.data?.data ?? [];
   const [products, setProducts] = useState([]);
+  const [maxItemLength, setMaxItemLength] = useState(1);
 
   useEffect(() => {
     if (data?.data?.data) {
-      setProducts(data?.data?.data);
+      let arr = data?.data?.data ?? [];
+      arr = arr.slice(0, maxItems);
+      setProducts(arr);
+
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      const maxItemMod = (data?.data?.data?.length ?? 10) / 10;
+      const maxItemL = maxItemMod;
+      setMaxItemLength((maxItemL + 1).toFixed(0));
     }
   }, [data]);
 
@@ -36,6 +45,17 @@ function Home() {
       setProducts(data?.data?.data);
     }
   };
+
+  // eslint-disable-next-line no-unused-vars
+  const onPageChange = (e, v) => {
+    let arr = data?.data?.data ?? [];
+    arr = arr.slice(v * maxItems - maxItems, v * maxItems);
+    setProducts(arr);
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 500);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar showLogout={false} onSearch={onSearch} />
@@ -52,6 +72,19 @@ function Home() {
               ))}
           </Grid>
         </MDBox>
+        {data?.data?.data && data?.data?.data?.length > 10 && (
+          <MDBox
+            spacing={3}
+            style={{ marginTop: 20, justifyContent: "center", display: "flex", width: "100%" }}
+          >
+            <Pagination
+              count={maxItemLength}
+              variant="outlined"
+              shape="rounded"
+              onChange={onPageChange}
+            />
+          </MDBox>
+        )}
       </MDBox>
     </DashboardLayout>
   );
