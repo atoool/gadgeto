@@ -13,7 +13,7 @@ import MDTypography from "components/MDTypography";
 import { Button } from "@mui/material";
 import SwipeableImages from "components/carousel";
 
-function CardWithImage({ url, img, title, desc, price, priceSymbol }) {
+function CardWithImage({ url, img, title, desc, price, priceSymbol, onVideoOpen }) {
   return (
     <Card sx={{ height: "100%" }}>
       <MDBox padding="1rem">
@@ -28,6 +28,9 @@ function CardWithImage({ url, img, title, desc, price, priceSymbol }) {
                 alignItems: "center",
                 justifyContent: "center",
                 boxShadow: "0px -2px 20px 1px rgba(0,0,0,0.1)",
+              }}
+              onClick={() => {
+                onVideoOpen();
               }}
             >
               <SwipeableImages img={img} />
@@ -81,6 +84,7 @@ CardWithImage.defaultProps = {
   // priceTip: "",
   priceSymbol: "₹",
   price: 0,
+  onVideoOpen: () => {},
 };
 
 // Typechecking props for the ReportsBarChart
@@ -92,6 +96,7 @@ CardWithImage.propTypes = {
   price: PropTypes.oneOfType([PropTypes.number]),
   // priceTip: PropTypes.oneOfType([PropTypes.string, PropTypes.any]),
   priceSymbol: PropTypes.oneOfType([PropTypes.string]),
+  onVideoOpen: PropTypes.func,
 };
 
 export default CardWithImage;

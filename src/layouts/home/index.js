@@ -11,8 +11,9 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import CardWithImage from "components/CardWithImage";
 import { useMaterialUIController } from "context";
 import { useFetchProductsByCountry } from "api/hooks/useProductApi";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pagination } from "@mui/material";
+import VideoModal from "components/VideoModal";
 
 const maxItems = 9;
 function Home() {
@@ -20,6 +21,7 @@ function Home() {
   const { data } = useFetchProductsByCountry(controller.country);
   const [products, setProducts] = useState([]);
   const [maxItemLength, setMaxItemLength] = useState(1);
+  const video = useRef();
 
   useEffect(() => {
     if (data?.data?.data) {
@@ -66,7 +68,12 @@ function Home() {
               products?.map((item, key) => (
                 <Grid item xs={12} md={6} lg={4} key={item.title + key ?? Math.random() + key}>
                   <MDBox mb={3}>
-                    <CardWithImage {...item} />
+                    <CardWithImage
+                      {...item}
+                      onVideoOpen={() => {
+                        video.current?.open();
+                      }}
+                    />
                   </MDBox>
                 </Grid>
               ))}
@@ -86,6 +93,7 @@ function Home() {
           </MDBox>
         )}
       </MDBox>
+      <VideoModal ref={video} />
     </DashboardLayout>
   );
 }
