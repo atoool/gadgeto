@@ -70,9 +70,7 @@ function Home() {
                   <MDBox mb={3}>
                     <CardWithImage
                       {...item}
-                      onVideoOpen={() => {
-                        video.current?.open();
-                      }}
+                      // onVideoOpen={video.current?.open}
                     />
                   </MDBox>
                 </Grid>
